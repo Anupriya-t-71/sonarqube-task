@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('SCM Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/Anupriya-t-71/sonarqube-task.git'
+            }
+        }
+
+        stage('Analyse Using SonarQube') {
+            environment {
+                scannerHome = tool 'sonar-scanner'
+            }
+
+            steps {
+                withSonarQubeEnv(
+                    credentialsId: 'sonarqube-token',
+                    installationName: 'SonarQube'
+                ) {
+                    sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=sonar-task \
+                        -Dsonar.projectName=sonar-task \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://localhost:9000
+                    """
+                }
+            }
+        }
+    }
+}
