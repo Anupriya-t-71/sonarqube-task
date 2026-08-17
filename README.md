@@ -1,0 +1,1 @@
+Practicing sonarqube-jenkins integration
